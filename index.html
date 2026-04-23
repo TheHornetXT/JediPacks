@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Jedizuke Packs</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg:        #0e1117;
+      --surface:   #161b22;
+      --card:      #1c2230;
+      --border:    #2a3346;
+      --green:     #1bd96a;
+      --green-dim: #0f8040;
+      --blue:      #58a6ff;
+      --text:      #e6edf3;
+      --muted:     #8b949e;
+      --red:       #f85149;
+      --gold:      #e3b341;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 16px;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ─── PIXEL NOISE OVERLAY ─── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect width='1' height='1' x='0' y='0' fill='%23ffffff' opacity='0.015'/%3E%3Crect width='1' height='1' x='2' y='2' fill='%23ffffff' opacity='0.015'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ─── GLOWING TOP BORDER ─── */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--green), transparent);
+      z-index: 100;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(14,17,23,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      height: 64px;
+    }
+
+    .logo {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.75rem;
+      color: var(--green);
+      text-shadow: 0 0 20px rgba(27,217,106,0.5);
+      text-decoration: none;
+      letter-spacing: 1px;
+      white-space: nowrap;
+    }
+
+    .logo span { color: var(--text); }
+
+    .nav-badge {
+      background: var(--green-dim);
+      color: var(--green);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.65rem;
+      padding: 2px 8px;
+      border-radius: 3px;
+      border: 1px solid var(--green-dim);
+    }
+
+    .nav-spacer { flex: 1; }
+
+    /* ─── SEARCH ─── */
+    .search-wrap {
+      position: relative;
+      width: 280px;
+    }
+
+    .search-wrap svg {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      pointer-events: none;
+    }
+
+    #searchInput {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 12px 8px 38px;
+      color: var(--text);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    #searchInput:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(27,217,106,0.15);
+    }
+
+    #searchInput::placeholder { color: var(--muted); }
+
+    /* ─── HERO ─── */
+    .hero {
+      position: relative;
+      padding: 5rem 2rem 4rem;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 60% 60% at 50% -10%, rgba(27,217,106,0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 40% at 80% 80%, rgba(88,166,255,0.06) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    /* Floating pixel squares */
+    .pixel-float {
+      position: absolute;
+      width: 8px; height: 8px;
+      background: var(--green);
+      opacity: 0.3;
+      animation: floatUp 6s ease-in-out infinite;
+    }
+    .pixel-float:nth-child(2) { left: 15%; animation-delay: -1s; background: var(--blue); }
+    .pixel-float:nth-child(3) { left: 75%; animation-delay: -3s; }
+    .pixel-float:nth-child(4) { left: 45%; animation-delay: -5s; background: var(--gold); }
+    .pixel-float:nth-child(5) { left: 85%; animation-delay: -2s; background: var(--blue); }
+
+    @keyframes floatUp {
+      0%   { transform: translateY(0) rotate(0deg); opacity: 0.3; }
+      50%  { opacity: 0.6; }
+      100% { transform: translateY(-120px) rotate(90deg); opacity: 0; }
+    }
+
+    .hero h1 {
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(1rem, 3vw, 1.6rem);
+      color: var(--text);
+      line-height: 1.6;
+      position: relative;
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      color: var(--green);
+      text-shadow: 0 0 30px rgba(27,217,106,0.6);
+    }
+
+    .hero p {
+      margin-top: 1.2rem;
+      color: var(--muted);
+      font-size: 1.15rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      position: relative;
+    }
+
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 2.5rem;
+      margin-top: 2rem;
+      position: relative;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-num {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 1.1rem;
+      color: var(--green);
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 4px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* ─── SECTION HEADER ─── */
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0 2rem 1.5rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-header h2 {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.75rem;
+      color: var(--text);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .section-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--border), transparent);
+    }
+
+    .section-count {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--muted);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    /* ─── PACK GRID ─── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1.5rem;
+      padding: 0 2rem 4rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* ─── PACK CARD ─── */
+    .pack-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+      animation: cardIn 0.5s ease both;
+      position: relative;
+    }
+
+    .pack-card:nth-child(2) { animation-delay: 0.1s; }
+
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .pack-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--green);
+      box-shadow: 0 8px 40px rgba(27,217,106,0.15), 0 0 0 1px rgba(27,217,106,0.2);
+    }
+
+    /* Card banner */
+    .card-banner {
+      height: 130px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card-banner svg {
+      width: 100%; height: 100%;
+      position: absolute; inset: 0;
+    }
+
+    .card-banner .banner-icon {
+      position: relative;
+      z-index: 2;
+      font-size: 3rem;
+      filter: drop-shadow(0 0 20px rgba(0,0,0,0.8));
+    }
+
+    /* Card body */
+    .card-body {
+      padding: 1.2rem;
+    }
+
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .card-icon {
+      width: 48px; height: 48px;
+      border-radius: 8px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      border: 2px solid var(--border);
+    }
+
+    .card-info { flex: 1; }
+
+    .card-name {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+
+    .card-author {
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .card-author span {
+      color: var(--blue);
+      cursor: pointer;
+    }
+
+    .card-desc {
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+
+    /* Tags */
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 1rem;
+    }
+
+    .tag {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    .tag-pvp    { background: rgba(248,81,73,0.15); color: var(--red); border: 1px solid rgba(248,81,73,0.3); }
+    .tag-ver    { background: rgba(88,166,255,0.1); color: var(--blue); border: 1px solid rgba(88,166,255,0.25); }
+    .tag-mc     { background: rgba(227,179,65,0.1); color: var(--gold); border: 1px solid rgba(227,179,65,0.25); }
+    .tag-crystal{ background: rgba(27,217,106,0.1); color: var(--green); border: 1px solid rgba(27,217,106,0.25); }
+
+    /* Footer row */
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .card-meta {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .meta-item svg { width: 14px; height: 14px; }
+
+    .btn-view {
+      background: var(--green-dim);
+      color: var(--green);
+      border: 1px solid var(--green);
+      padding: 7px 16px;
+      border-radius: 6px;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-view:hover {
+      background: var(--green);
+      color: #000;
+      box-shadow: 0 0 16px rgba(27,217,106,0.4);
+      transform: scale(1.03);
+    }
+
+    /* ─── NO RESULTS ─── */
+    .no-results {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--muted);
+      display: none;
+    }
+
+    .no-results svg { margin-bottom: 1rem; opacity: 0.4; }
+
+    .no-results p {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 1px;
+    }
+
+    /* ─── MODAL OVERLAY ─── */
+    .overlay {
+      display: none;
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(6px);
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .overlay.open { display: flex; }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    /* Modal */
+    .modal {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+      animation: slideUp 0.25s ease;
+      position: relative;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .modal-banner {
+      height: 160px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 16px 16px 0 0;
+    }
+
+    .modal-banner svg {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+    }
+
+    .modal-banner .modal-icon {
+      position: relative;
+      z-index: 2;
+      font-size: 4rem;
+      filter: drop-shadow(0 4px 24px rgba(0,0,0,0.9));
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1rem; right: 1rem;
+      background: rgba(0,0,0,0.6);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .modal-close:hover { color: var(--text); border-color: var(--text); }
+
+    .modal-body { padding: 1.5rem; }
+
+    .modal-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+
+    .modal-author {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+
+    .modal-author span { color: var(--blue); }
+
+    .modal-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 1.25rem;
+    }
+
+    .modal-section-title {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--muted);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+      margin-top: 1.25rem;
+    }
+
+    .modal-desc {
+      font-size: 1rem;
+      color: var(--muted);
+      line-height: 1.7;
+      font-weight: 500;
+    }
+
+    /* Version box */
+    .version-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    .version-info { flex: 1; }
+
+    .version-name {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1rem;
+      color: var(--green);
+    }
+
+    .version-meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 4px;
+      font-weight: 500;
+    }
+
+    .version-badge {
+      background: rgba(27,217,106,0.12);
+      color: var(--green);
+      border: 1px solid rgba(27,217,106,0.3);
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-family: 'Share Tech Mono', monospace;
+    }
+
+    /* Download button */
+    .btn-download {
+      width: 100%;
+      margin-top: 1.5rem;
+      padding: 14px;
+      background: var(--green);
+      color: #000;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: 1px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+      text-transform: uppercase;
+    }
+
+    .btn-download:hover {
+      background: #2dffa0;
+      box-shadow: 0 0 30px rgba(27,217,106,0.5);
+      transform: scale(1.01);
+    }
+
+    .btn-download:active { transform: scale(0.99); }
+
+    .btn-download svg { width: 18px; height: 18px; }
+
+    /* Download note */
+    .dl-note {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.75rem;
+      font-weight: 500;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      text-align: center;
+    }
+
+    footer p {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    footer span { color: var(--green); }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--green-dim); }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 0.75rem; }
+      .grid { grid-template-columns: 1fr; padding: 0 1rem 3rem; }
+      .section-header { padding: 0 1rem 1.5rem; }
+      nav { padding: 0 1rem; }
+      .search-wrap { width: 100%; max-width: 220px; }
+      .hero-stats { gap: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">Jedizuke<span>Packs</span></a>
+  <span class="nav-badge">MC 1.21.11</span>
+  <div class="nav-spacer"></div>
+  <div class="search-wrap">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+    </svg>
+    <input type="text" id="searchInput" placeholder="Search packs..." autocomplete="off"/>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="pixel-float" style="left:10%; top:60%;"></div>
+  <div class="pixel-float" style="top:40%;"></div>
+  <div class="pixel-float" style="top:70%;"></div>
+  <div class="pixel-float" style="top:50%;"></div>
+  <div class="pixel-float" style="top:80%;"></div>
+  <h1>Welcome to <em>Jedizuke Packs</em></h1>
+  <p>Custom Minecraft modpacks crafted for competitive PVP players.</p>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num" id="packCount">2</div>
+      <div class="stat-label">Packs</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">1.21</div>
+      <div class="stat-label">MC Version</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">FREE</div>
+      <div class="stat-label">Always</div>
+    </div>
+  </div>
+</section>
+
+<!-- PACK GRID -->
+<div class="section-header">
+  <h2>All Packs</h2>
+  <div class="section-line"></div>
+  <div class="section-count" id="resultCount">2 packs</div>
+</div>
+
+<div class="grid" id="packGrid"></div>
+<div class="no-results" id="noResults">
+  <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+  <p>No packs found.</p>
+</div>
+
+<!-- MODAL -->
+<div class="overlay" id="overlay">
+  <div class="modal" id="modal">
+    <div class="modal-banner" id="modalBanner">
+      <button class="modal-close" id="modalClose">✕</button>
+      <div class="modal-icon" id="modalIcon"></div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-title" id="modalTitle"></div>
+      <div class="modal-author" id="modalAuthor"></div>
+      <div class="modal-tags" id="modalTags"></div>
+
+      <div class="modal-section-title">About</div>
+      <div class="modal-desc" id="modalDesc"></div>
+
+      <div class="modal-section-title">Latest Version</div>
+      <div class="version-box">
+        <div class="version-info">
+          <div class="version-name" id="modalVersion"></div>
+          <div class="version-meta" id="modalVerMeta"></div>
+        </div>
+        <div class="version-badge">RELEASE</div>
+      </div>
+
+      <button class="btn-download" id="dlBtn">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 3v13m0 0-4-4m4 4 4-4"/><path d="M3 18h18"/></svg>
+        Download Pack
+      </button>
+      <div class="dl-note">Free download · No account required</div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p>Made with <span>♥</span> by <span>Jedizuke</span> · Minecraft 1.21.11 · Not affiliated with Mojang</p>
+</footer>
+
+<script>
+// ─── PACK DATA ───────────────────────────────────────────────────────────────
+const packs = [
+  {
+    id: 1,
+    name: "Crystal PVP 1.21.11 Pack",
+    author: "Jedizuke",
+    shortDesc: "Dominate crystal PVP with optimized performance mods, FPS boosts, and crisp hitboxes.",
+    fullDesc: "The Crystal PVP 1.21.11 Pack is built from the ground up for crystal combat. It includes performance-enhancing mods to keep your FPS sky-high during intense crystal fights, hit-registration improvements, and visual tweaks that make crystal explosions and placement clearer than vanilla. Designed for competitive play on 1.21.11.",
+    version: "1.0.0",
+    mcVersion: "1.21.11",
+    loaderVer: "Fabric",
+    tags: [
+      { text: "Crystal", cls: "tag-crystal" },
+      { text: "PVP", cls: "tag-pvp" },
+      { text: "1.21.11", cls: "tag-ver" },
+      { text: "Fabric", cls: "tag-mc" },
+    ],
+    icon: "💎",
+    bgGrad: "linear-gradient(135deg, #0a2a1a 0%, #0d3d2b 50%, #071a10 100%)",
+    accentColor: "#1bd96a",
+    downloads: "—",
+    // Replace '#' with your actual download link
+    downloadUrl: "#"
+  },
+  {
+    id: 2,
+    name: "Sword/Axe PVP Pack 1.21.11",
+    author: "Jedizuke",
+    shortDesc: "Sharpen your edge in sword and axe combat with reach indicators, animation tweaks, and lag-free gameplay.",
+    fullDesc: "The Sword/Axe PVP Pack 1.21.11 is tailored for close-range combat specialists. Featuring smooth swing animations, reach visualizers, and FPS optimization mods, this pack gives you the edge you need in sword duels and axe fights. Built for 1.21.11 on Fabric — lightweight and competitive-ready.",
+    version: "1.0.0",
+    mcVersion: "1.21.11",
+    loaderVer: "Fabric",
+    tags: [
+      { text: "Sword", cls: "tag-pvp" },
+      { text: "Axe", cls: "tag-pvp" },
+      { text: "PVP", cls: "tag-pvp" },
+      { text: "1.21.11", cls: "tag-ver" },
+      { text: "Fabric", cls: "tag-mc" },
+    ],
+    icon: "⚔️",
+    bgGrad: "linear-gradient(135deg, #1a0a00 0%, #2d1a00 50%, #120900 100%)",
+    accentColor: "#e3b341",
+    downloads: "—",
+    // Replace '#' with your actual download link
+    downloadUrl: "#"
+  }
+];
+
+// ─── RENDER CARDS ─────────────────────────────────────────────────────────────
+function renderCards(list) {
+  const grid = document.getElementById('packGrid');
+  const noR  = document.getElementById('noResults');
+  const cnt  = document.getElementById('resultCount');
+
+  grid.innerHTML = '';
+
+  if (!list.length) {
+    noR.style.display = 'block';
+    cnt.textContent = '0 packs';
+    return;
+  }
+
+  noR.style.display = 'none';
+  cnt.textContent = list.length + ' pack' + (list.length !== 1 ? 's' : '');
+
+  list.forEach((p, i) => {
+    const card = document.createElement('div');
+    card.className = 'pack-card';
+    card.style.animationDelay = (i * 0.1) + 's';
+
+    card.innerHTML = `
+      <div class="card-banner">
+        <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="bg${p.id}" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="${p.accentColor}" stop-opacity="0.18"/>
+              <stop offset="100%" stop-color="#000" stop-opacity="0.8"/>
+            </linearGradient>
+            <pattern id="grid${p.id}" width="20" height="20" patternUnits="userSpaceOnUse">
+              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="${p.accentColor}" stroke-opacity="0.06" stroke-width="0.5"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#bg${p.id})"/>
+          <rect width="100%" height="100%" fill="url(#grid${p.id})"/>
+        </svg>
+        <div class="banner-icon">${p.icon}</div>
+      </div>
+      <div class="card-body">
+        <div class="card-top">
+          <div class="card-icon" style="background:${p.bgGrad}">${p.icon}</div>
+          <div class="card-info">
+            <div class="card-name">${p.name}</div>
+            <div class="card-author">by <span>${p.author}</span></div>
+          </div>
+        </div>
+        <div class="card-desc">${p.shortDesc}</div>
+        <div class="card-tags">${p.tags.map(t => `<span class="tag ${t.cls}">${t.text}</span>`).join('')}</div>
+        <div class="card-footer">
+          <div class="card-meta">
+            <div class="meta-item">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 3v10m0 0-3-3m3 3 3-3"/><rect x="3" y="18" width="18" height="3" rx="1"/></svg>
+              ${p.downloads}
+            </div>
+            <div class="meta-item">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              Free
+            </div>
+          </div>
+          <button class="btn-view" onclick="openModal(${p.id})">View Pack</button>
+        </div>
+      </div>
+    `;
+
+    grid.appendChild(card);
+  });
+}
+
+// ─── MODAL ───────────────────────────────────────────────────────────────────
+function openModal(id) {
+  const p = packs.find(x => x.id === id);
+  if (!p) return;
+
+  document.getElementById('modalBanner').style.background = p.bgGrad;
+  document.getElementById('modalIcon').textContent  = p.icon;
+  document.getElementById('modalTitle').textContent = p.name;
+  document.getElementById('modalAuthor').innerHTML  = `by <span>${p.author}</span>`;
+  document.getElementById('modalDesc').textContent  = p.fullDesc;
+  document.getElementById('modalVersion').textContent = `v${p.version}  ·  MC ${p.mcVersion}`;
+  document.getElementById('modalVerMeta').textContent = `${p.loaderVer} · Compatible with Minecraft ${p.mcVersion}`;
+
+  const tagsEl = document.getElementById('modalTags');
+  tagsEl.innerHTML = p.tags.map(t => `<span class="tag ${t.cls}">${t.text}</span>`).join('');
+
+  const dlBtn = document.getElementById('dlBtn');
+  dlBtn.onclick = () => {
+    if (p.downloadUrl === '#') {
+      alert('Download link coming soon! Check back later.');
+    } else {
+      window.open(p.downloadUrl, '_blank');
+    }
+  };
+
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('modalClose').addEventListener('click', closeModal);
+document.getElementById('overlay').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('overlay')) closeModal();
+});
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+// ─── SEARCH ──────────────────────────────────────────────────────────────────
+document.getElementById('searchInput').addEventListener('input', function() {
+  const q = this.value.trim().toLowerCase();
+  const filtered = q
+    ? packs.filter(p =>
+        p.name.toLowerCase().includes(q) ||
+        p.shortDesc.toLowerCase().includes(q) ||
+        p.tags.some(t => t.text.toLowerCase().includes(q))
+      )
+    : packs;
+  renderCards(filtered);
+  document.getElementById('packCount').textContent = filtered.length;
+});
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+renderCards(packs);
+</script>
+</body>
+</html>
